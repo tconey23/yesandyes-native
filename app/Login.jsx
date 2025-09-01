@@ -4,11 +4,26 @@ import Logo from './components/Logo';
 import Graphics from './components/Graphics';
 import { supabase } from './business/supabase'; // Correct import
 
-export default function Login({ setToggleAlert, setSession}) {
+export default function Login({ setToggleAlert, setSession, session}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const scrollRef = useRef();
+
+  useEffect(() =>{
+    if(window.location.origin.includes(':8081')){
+      setTimeout(() => {
+        setEmail('tom.ce.coney@gmail.com')
+        setPassword('MaddMax1987!')
+      }, 2000)
+    }
+  }, [])
+
+  useEffect(() => {
+    if(email === 'tom.ce.coney@gmail.com' && password === 'MaddMax1987!') {
+      handleLogin()
+    }
+  }, [email, password])
 
   const handleLogin = async () => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });

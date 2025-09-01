@@ -143,10 +143,10 @@ export default function Index() {
       >
         {!session ? (
           <View style={{ width: '100%', height: '90%', justifyContent: 'center', backgroundColor: 'black',}}>
-            <Login setToggleAlert={setToggleAlert} setSession={setSession} />
+            <Login setToggleAlert={setToggleAlert} setSession={setSession} session={session}/>
           </View>
         ) : (
-          user && <HomePage user={user} partner={partner} setSession={setSession} />
+          user && <HomePage user={user} partner={partner} setSession={setSession} session={session}/>
         )}
       </View>
     </>

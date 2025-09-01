@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, Button, StyleSheet } from "react-native"
+import { TouchableOpacity, View, Button, StyleSheet, ScrollView } from "react-native"
 import Accordion from '../elements/Accordion'
 import UserProfile from './UserProfile'
 import UserFantasyBoard from './UserFantasyBoard'
@@ -10,9 +10,10 @@ import Header from './Header'
 import PrivacyInfo from './Privacy'
 import About from './About'
 
-export default function HomePage({user, partner, setSession}){
+export default function HomePage({user, partner, setSession, session}){
 
     const [selectedComponent, setSelectedComponent] = useState(null);
+    const [accIdx, setAccIdx] = useState('You')
 
     const pages = [
         {name: 'You', component: 
@@ -33,7 +34,7 @@ export default function HomePage({user, partner, setSession}){
                     title="Fantasy Board"
                     onPress={() =>
                         setSelectedComponent(() => () => (
-                        <UserFantasyBoard user={user} setSelectedOption={() => setSelectedComponent(null)} />
+                        <UserFantasyBoard user={user} setSelectedOption={() => setSelectedComponent(null)} session={session}/>
                         ))
                     }
                 >
@@ -69,7 +70,7 @@ export default function HomePage({user, partner, setSession}){
                     title="Fantasy Board" 
                     onPress={() =>
                         setSelectedComponent(() => () => (
-                        <UserFantasyBoard user={partner} setSelectedOption={() => setSelectedComponent(null)} />
+                        <UserFantasyBoard session={session} user={partner} setSelectedOption={() => setSelectedComponent(null)} />
                         ))
                     }
                 >
@@ -123,11 +124,11 @@ export default function HomePage({user, partner, setSession}){
                 <Graphics />
             </View>}
             {selectedComponent ? selectedComponent() : (
-            <View style={{width: '100%', height: '100%', paddingLeft: 20, backgroundColor: 'whitesmoke'}}>
+            <ScrollView style={{width: '100%', height: '100%', paddingLeft: 20, backgroundColor: 'whitesmoke'}}>
                 {pages.map((p) => (
-                    <Accordion key={p.name} title={p.name} content={p.component} fs={40} />
+                    <Accordion key={p.name} title={p.name} content={p.component} fs={40} coll={!accIdx == p.name} setAccIdx={setAccIdx}/>
                 ))}
-            </View>
+            </ScrollView>
             )}
 
         </View>

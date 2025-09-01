@@ -1,10 +1,15 @@
 import Collapsible from 'react-native-collapsible';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import Text from './Text'
 
-export default function Accordion ({title, content, coll = true, fs = 18, mb=30}) {
-    const [collapsed, setCollapsed] = useState(coll)
+export default function Accordion ({title, content, coll, fs = 18, mb=30, children}) {
+    const [collapsed, setCollapsed] = useState(true)
+
+    useEffect(() => {
+      setCollapsed(coll)
+    }, [coll])
+
   return (
     <View style={{marginBottom: mb}}>
       <TouchableOpacity onPress={() => setCollapsed(!collapsed)}>
@@ -19,7 +24,9 @@ export default function Accordion ({title, content, coll = true, fs = 18, mb=30}
       </TouchableOpacity>
       
       <Collapsible collapsed={collapsed}>
-        {content}
+        <View style={{overflow: 'hidden'}}>
+          {content ? content : children}
+        </View>
       </Collapsible>
     </View>
   )

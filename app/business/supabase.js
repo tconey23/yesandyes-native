@@ -171,27 +171,68 @@ export const getFantasyComments = async (id) => {
   return data
 }
 
-export const fantasyComment = async (id, auth, text) => {
+export const fantasyComment = async (id, auth, text, partner) => {
+
+  console.log(id, auth, text)
 
 const { data, error } = await supabase
   .from('fantasy_comments')
   .insert([
-    { author_id: auth, comment_text: text, linked_fantasy: id },
+    { author_id: auth, comment_text: text, linked_fantasy: id, partner_id: partner },
   ])
   .select()
+
+  console.log(data, error)
           
 }
 
 export const insertFantasy = async (text, auth, imgs, pub) => {
+  // STEP 1: Upload each image
+  const uploadedUrls = [];
 
+  for (let i = 0; i < imgs.length; i++) {
+    const file = imgs[i];
+    const fileExt = file.name.split('.').pop();
+    const filePath = `fantasies/${auth}/${Date.now()}_${i}.${fileExt}`;
+
+    const { data: uploadData, error: uploadError } = await supabase
+      .storage
+      .from('fantasy_images') // 👈 your bucket name
+      .upload(filePath, file);
+
+    if (uploadError) {
+      console.error(`❌ Error uploading image ${i}:`, uploadError);
+      return;
+    }
+
+    const { data: urlData } = supabase
+      .storage
+      .from('fantasy_images')
+      .getPublicUrl(filePath);
+
+    uploadedUrls.push(urlData.publicUrl); // push the public URL
+  }
+
+  // STEP 2: Insert fantasy with uploaded image URLs
   const { data, error } = await supabase
     .from('fantasies')
     .insert([
-      { text_content: text, author_id: auth, images: imgs, published: pub},
+      {
+        text_content: text,
+        author_id: auth,
+        images: uploadedUrls, // 👈 store array of public URLs
+        published: pub,
+      },
     ])
-    .select()
-          
-}
+    .select();
+
+  if (error) {
+    console.error("❌ Error inserting fantasy:", error);
+  }
+
+  return data;
+};
+
 
 
 
