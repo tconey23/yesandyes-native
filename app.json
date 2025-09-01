@@ -4,12 +4,20 @@
     "slug": "YesAndYes",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/ios/AppIcon~ios-marketing.png",
     "scheme": "yesandyes",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tomconey.yesandyes",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "entitlements": {
+        "aps-environment": "development"
+      },
+      "buildNumber": "12"
     },
     "android": {
       "adaptiveIcon": {
@@ -33,10 +41,17 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "8a1af26c-5277-4c91-987d-d13f760b2b7f"
+      }
     }
   }
 }
